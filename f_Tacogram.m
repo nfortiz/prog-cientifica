@@ -1,19 +1,25 @@
 function [ tacograma, tiempo] = f_Tacogram( ECG_Reg, frecuencia )
-    
-    %-- Limpiando el ruido
-    x_r=diff(ECG_Reg).^2;
-    
-    
     vector_tiempo=0:(1/frecuencia):((length(ECG_Reg)/frecuencia)-(1/frecuencia));
+    %-- Limpiando el ruido    
+     x_r=diff(ECG_Reg).^2;
+     
+    fresult=fft(ECG_Reg);     
+    fresult(1 : round(length(fresult)*5/frecuencia))=0;
+    fresult(end - round(length(fresult)*5/frecuencia) : end)=0;
+    corrected=real(ifft(fresult));
+    
+     desv_std_r=std(x_r);
+    [ry, rx]=findpeaks(x_r,vector_tiempo(2:end),'MinPeakHeight',desv_std_r);
     [pk,lk] = findpeaks(ECG_Reg,vector_tiempo,'MinPeakDistance',0.5,'MinPeakHeight',0.5);
     
     figure
+    subplot(2, 1, 1);
     plot(vector_tiempo,ECG_Reg,lk,pk,'o')
-    title('Picos R')
+    title('Picos R')    
+    subplot(2, 1, 2);
+    plot(vector_tiempo(1:end),corrected)
+  %  plot(vector_tiempo(1:end),corrected,rx,ry,'o',rx,ones(1,length(ry)).*desv_std_r)    
     
-    
-    figure('Name', 'Ruido')    
-    plot(vector_tiempo(2:end),x_r)
     
     tacograma=zeros(1,length(pk)-1);
     
