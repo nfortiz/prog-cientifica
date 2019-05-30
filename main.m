@@ -9,7 +9,7 @@ vector_tiempo=0:(1/256):((length(Y_Signal)/256)-(1/256));
 
 
 %% Parte 2
-clc, clear all, close all;
+%clc, clear all, close all;
 
 load('./Data/Arr_Ann_Loc.mat');%
 load('./Data/Arr_Ann_Str.mat');%Anotaciones de los picos
@@ -24,6 +24,7 @@ for k=1:length(anotaciones)
     end
 end
 
-f_Tacogram(m_Data(7,:),360);
+%f_Tacogram(m_Data(7,:),360);
 
-%   f_Tacogram(Y_Signal,256);
+f_Tacogram(Y_Signal,256);
+f_Clasifier(Y_Signal,256);
